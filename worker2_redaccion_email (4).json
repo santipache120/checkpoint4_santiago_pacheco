@@ -1,0 +1,163 @@
+{
+  "name": "worker2_redaccion_email",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "solicitud"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "91236f62-8c9a-4f35-bd6b-50a4cfb36020",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.solicitud }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Sos un redactor de correos corporativos. A partir de la solicitud del usuario, redactá un correo con asunto y cuerpo. Reglas: tono formal y breve, español estándar sin lenguaje inclusivo, no inventes datos que no estén en la solicitud, no envíes nada (solo redactás el borrador)."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        224,
+        0
+      ],
+      "id": "3e864b1f-46be-4ef1-aa2d-a042c35e87d9",
+      "name": "Basic LLM Chain",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        176
+      ],
+      "id": "fdce19ad-7791-4daa-9a13-182520071e5c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ { status: \"success\", worker: \"redaccion_email\", data: { borrador: $json.text } } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        608,
+        -64
+      ],
+      "id": "343ebb57-0d5f-4242-b99c-046e796150e8",
+      "name": "Contrato de salida"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ { status: \"error\", worker: \"redaccion_email\", data: null, message: \"El worker no pudo redactar el correo\" } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        608,
+        96
+      ],
+      "id": "2db3b431-4a7e-4da3-b96d-09797d6ac6db",
+      "name": "Contrato de error"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Contrato de error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 60,
+    "availableInMCP": false
+  },
+  "versionId": "a8db0bb7-1fd3-4d2e-95c5-573fa40a121a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8e3d57bd990472c5c86e763f57465e24382b5baac8a7d2f75d6f7755d9abcf26"
+  },
+  "nodeGroups": [],
+  "id": "XQzPdEBxKXpe1cid",
+  "tags": []
+}
