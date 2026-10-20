@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/33318415/README.md)
 # Checkpoint 4 – Sincronización del Cerebro Agéntico con Ecosistemas de Negocio
 
 **Alumno:** Santiago Pacheco · **Módulo 4** del curso de AI Automation avanzado (n8n)
@@ -11,6 +10,7 @@
 | `checkpoint4_santiago_pacheco.json` | Workflow principal (Manager + rama M4). **Entregable.** |
 | `Worker1_Consulta_Clientes_Santiago_Pacheco.json` | Sub-workflow Worker 1 (consulta de clientes). |
 | `worker2_redaccion_email.json` | Sub-workflow Worker 2 (redacción de emails). |
+| `Reporte_Evidencias_Checkpoint4_SantiagoPacheco.pdf` | Reporte de evidencias: tests de ejecución con capturas, tabla de resultados y mapeo con la rúbrica. |
 
 > El Manager llama a los Workers con *Execute Workflow* por ID. Al importar, hay que importar primero los Workers y reapuntar los dos nodos `Llamar Worker 1/2` a los workflows importados.
 
@@ -66,6 +66,9 @@ Chat Trigger ─► memoria Airtable ─► detección de nombre ─► Text Cla
 3. Mantener el workflow **inactivo** mientras se prueba (el Gmail Trigger hace polling cada minuto) y ejecutar con *Execute workflow*.
 
 ### Plan de pruebas (regresión manual)
+
+Las capturas de cada ejecución están en `Reporte_Evidencias_Checkpoint4_SantiagoPacheco.pdf`.
+
 
 | Prueba | Entrada | Resultado esperado |
 |---|---|---|
